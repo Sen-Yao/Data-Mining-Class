@@ -4,10 +4,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import classification_report
 from sklearn.pipeline import make_pipeline
-import matplotlib.pyplot as plt
 
+print('开始读取')
 # 步骤1：加载LFW数据集
-lfw_people = fetch_lfw_people(data_home='lfw_funneled', min_faces_per_person=50, resize=0.4)
+lfw_people = fetch_lfw_people(data_home='../dataset', min_faces_per_person=50, resize=0.4)
+
+print('读取完毕')
 
 n_samples, h, w = lfw_people.images.shape
 X = lfw_people.data
@@ -22,10 +24,9 @@ print("总样本数: %d" % n_samples)
 print("总特征数: %d" % n_features)
 print("类别数: %d" % n_classes)
 
-# 步骤2：拆分数据集为训练集和测试集
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
 
-# 步骤3：使用PCA进行特征降维
 n_components = 150
 pca = PCA(n_components=n_components, whiten=True).fit(X_train)
 
@@ -33,7 +34,6 @@ pca = PCA(n_components=n_components, whiten=True).fit(X_train)
 X_train_pca = pca.transform(X_train)
 X_test_pca = pca.transform(X_test)
 
-print('训练中')
 
 # 步骤4：训练一个SVM分类器
 svm = SVC(kernel='rbf', class_weight='balanced')
